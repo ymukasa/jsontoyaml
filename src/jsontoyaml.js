@@ -3,10 +3,14 @@ const electron = require('electron');
 const dialog = electron.remote.dialog;
 const jsyaml = require('js-yaml');
 
+/**
+ * jsonファイルの読み込みとyamlファイルの出力を行う。
+ * 画面のボタン操作から呼ばれる処理。
+ */
 function readJsonAndOutputYaml() {
   var dirPath = document.getElementById("dirpath").value;
   if (!dirPath.endsWith("/") && !dirPath.endsWith("\\")) {
-    dirPath += "\\";
+    dirPath += "/";
   }
   fs.readdir(dirPath, function(err, fileNameList) {
     if (err) throw err;
@@ -25,30 +29,46 @@ function readJsonAndOutputYaml() {
   });
 }
 
+/**
+ * yamlファイル出力用のディレクトリを作成する。
+ * 指定されたディレクトリパスの末尾にディレクトリ区切り文字がなければ勝手に付与します。
+ * @param {string} orgDirPath 作成するディレクトリのパス
+ */
 function mkYamlDir(orgDirPath) {
   if (!orgDirPath.endsWith("/") && !orgDirPath.endsWith("\\")) {
-    orgDirPath += "\\";
+    orgDirPath += "/";
   }
-  targetDirPath = orgDirPath + "yaml\\";
+  targetDirPath = orgDirPath + "yaml/";
   if (!fs.existsSync(targetDirPath)) {
     fs.mkdirSync(targetDirPath);
   }
   return targetDirPath;
 }
 
+/**
+ * json文字列をyamlに変換してファイルに出力する処理。
+ * @param {string} jsonContents 変換元のjson文字列
+ * @param {string} outputDirPath 出力先のディレクトリパス
+ * @param {string} fileName 出力先のファイル名
+ */
 function outputYaml(jsonContents, outputDirPath, fileName) {
   var yaml = jtoy(jsonContents);
   if (!outputDirPath.endsWith("/") && !outputDirPath.endsWith("\\")) {
-    outputDirPath += "\\";
+    outputDirPath += "/";
   }
   fs.writeFileSync(outputDirPath + fileName, yaml, "utf8");
 }
 
-function jtoy(val){
+/**
+ * json文字列をyamlに変換する。
+ * 変換には js-yaml を使用する。
+ * @param {string} jsonContents 変換対象のjson文字列
+ */
+function jtoy(jsonContents){
   try{
       return jsyaml.dump(
           JSON.parse(
-              val
+              jsonContents
               .replace(/([^\\])\\t/g,"$1<<TAB>>")
               .replace(/([^\\])\\t/g,"$1<<TAB>>")
               .replace(/^\\t/g,"<<TAB>>")
