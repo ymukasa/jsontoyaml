@@ -9,14 +9,11 @@ const jsyaml = require('js-yaml');
  */
 function readJsonAndOutputYaml() {
   var dirPath = document.getElementById("dirpath").value;
-  if (!dirPath.endsWith("/") && !dirPath.endsWith("\\")) {
-    dirPath += "/";
-  }
   fs.readdir(dirPath, function(err, fileNameList) {
     if (err) throw err;
     var yamlDirPath = mkYamlDir(dirPath);
     fileNameList.forEach(function(fileName){
-      var filePath = dirPath + fileName;
+      var filePath = dirPath + "/" + fileName;
       if (/.*\.json$/.test(fileName)){
         fs.accessSync(filePath, fs.constants.R_OK);
         if (err) throw err;
@@ -25,8 +22,8 @@ function readJsonAndOutputYaml() {
         outputYaml(jsonContents, yamlDirPath, yamlFileName);
       }
     });
-    dialog.showMessageBox(null, {message: '出力完了'});
   });
+  dialog.showMessageBox(null, {message: '出力完了？'});
 }
 
 /**
@@ -52,11 +49,11 @@ function mkYamlDir(orgDirPath) {
  * @param {string} fileName 出力先のファイル名
  */
 function outputYaml(jsonContents, outputDirPath, fileName) {
-  var yaml = jtoy(jsonContents);
+  var yamlContents = jtoy(jsonContents);
   if (!outputDirPath.endsWith("/") && !outputDirPath.endsWith("\\")) {
     outputDirPath += "/";
   }
-  fs.writeFileSync(outputDirPath + fileName, yaml, "utf8");
+  fs.writeFileSync(outputDirPath + fileName, yamlContents, "utf8");
 }
 
 /**
@@ -65,18 +62,38 @@ function outputYaml(jsonContents, outputDirPath, fileName) {
  * @param {string} jsonContents 変換対象のjson文字列
  */
 function jtoy(jsonContents){
+
+  var json = JSON.parse(
+    jsonContents
+    .replace(/([^\\])\\t/g,"$1<<TAB>>")
+    .replace(/([^\\])\\t/g,"$1<<TAB>>")
+    .replace(/^\\t/g,"<<TAB>>")
+  );
+
+  var excludeItems = document.getElementById("excludeItems").value;
+  excludeItems.split(",").map(excludeItem => excludeItem.trim()).forEach(excludeItem => {
+    deleteItem(json, excludeItem);
+  });
+
   try{
-      return jsyaml.dump(
-          JSON.parse(
-              jsonContents
-              .replace(/([^\\])\\t/g,"$1<<TAB>>")
-              .replace(/([^\\])\\t/g,"$1<<TAB>>")
-              .replace(/^\\t/g,"<<TAB>>")
-          )
-      ).replace(/<<TAB>>/g,"\t");
+      return jsyaml.dump(json).replace(/<<TAB>>/g,"\t");
   }catch(e){
       alert(e.message);
   }
+}
+
+function deleteItem(data, deleteItemName) {
+  if (data == null || !isObject(data)) {
+    return;
+  }
+  delete data[deleteItemName];
+  Object.keys(data).forEach(key => {
+    deleteItem(data[key], deleteItemName);
+  });
+}
+
+function isObject( obj ) {
+  return Object.prototype.toString.call( obj ) === "[object Object]";
 }
 
 /**
