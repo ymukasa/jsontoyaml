@@ -5,20 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "chrome",
+            "type": "node",
             "request": "launch",
             "name": "jsontoyaml debug",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": null,
-            "runtimeArgs": [
-                "${workspaceFolder}\\src\\main.js",
-                "--remote-debugging-port=9222"
-            ],
+            "runtimeArgs": [],
+            "program": "${workspaceFolder}/src/main.js",
             "env": {
                 "NODE_ENV": "development"
             },
-            "port":9222,
-            "runtimeExecutable": "${workspaceFolder}\\node_modules\\electron\\dist\\electron.exe",
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/electron/dist/electron.exe",
+            },
+            "osx": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/electron/dist/Electron.app",
+            },
             "sourceMaps": false
         }
     ]

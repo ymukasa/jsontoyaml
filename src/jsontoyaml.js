@@ -82,8 +82,20 @@ function jtoy(jsonContents){
   }
 }
 
+/**
+ * data 内の項目を削除する
+ * @param {object} data 処理対象のオブジェクト
+ * @param {string} deleteItemName 削除対象の項目名
+ */
 function deleteItem(data, deleteItemName) {
-  if (data == null || !isObject(data)) {
+  if (data == null) {
+    return;
+  } else if (Array.isArray(data)) {
+    data.forEach(function(dataElement) {
+      deleteItem(dataElement, deleteItemName);
+    });
+    return;
+  } else if (!isObject(data)) {
     return;
   }
   delete data[deleteItemName];
@@ -92,8 +104,13 @@ function deleteItem(data, deleteItemName) {
   });
 }
 
-function isObject( obj ) {
-  return Object.prototype.toString.call( obj ) === "[object Object]";
+/**
+ * obj が object かどうかを判定する
+ * @param {object} obj 判定対象のオブジェクト
+ * @return 判定結果。true：object である、false：そうではない
+ */
+function isObject(obj) {
+  return Object.prototype.toString.call(obj) === "[object Object]";
 }
 
 /**
