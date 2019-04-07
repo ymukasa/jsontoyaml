@@ -10,20 +10,21 @@ const jsyaml = require('js-yaml');
 function readJsonAndOutputYaml() {
   var dirPath = document.getElementById("dirpath").value;
   fs.readdir(dirPath, function(err, fileNameList) {
-    if (err) throw err;
+    if (err) {
+      throw err;
+    }
     var yamlDirPath = mkYamlDir(dirPath);
     fileNameList.forEach(function(fileName){
       var filePath = dirPath + "/" + fileName;
       if (/.*\.json$/.test(fileName)){
         fs.accessSync(filePath, fs.constants.R_OK);
-        if (err) throw err;
         var jsonContents = fs.readFileSync(filePath, "utf8");
         var yamlFileName = fileName.replace("\.json", ".yml");
         outputYaml(jsonContents, yamlDirPath, yamlFileName);
       }
     });
+    dialog.showMessageBox(null, {message: '出力終わりましたよ？'});
   });
-  dialog.showMessageBox(null, {message: '出力完了？'});
 }
 
 /**
