@@ -4,7 +4,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "electron": "^4.1.1",
+    "electron": "^4.2.12",
     "fs": "0.0.1-security",
     "js-yaml": "^3.13.1"
   }
