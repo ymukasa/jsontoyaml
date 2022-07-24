@@ -3,9 +3,15 @@
   "version": "0.1.0",
   "license": "MIT",
   "private": true,
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
   "dependencies": {
-    "electron": "^15.5.5",
-    "fs": "0.0.1-security",
-    "js-yaml": "^3.13.1"
+    "fs": "^0.0.1-security",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "electron": "^19.0.9"
   }
 }

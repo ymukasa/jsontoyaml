@@ -1,27 +1,17 @@
 {
-    // IntelliSense を使用して利用可能な属性を学べます。
-    // 既存の属性の説明をホバーして表示します。
-    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "jsontoyaml debug",
-            "cwd": "${workspaceFolder}",
-            "preLaunchTask": null,
-            "runtimeArgs": [],
-            "program": "${workspaceFolder}/src/main.js",
-            "env": {
-                "NODE_ENV": "development"
-            },
-            "windows": {
-                "runtimeExecutable": "${workspaceFolder}/node_modules/electron/dist/electron.exe",
-            },
-            "osx": {
-                "runtimeExecutable": "${workspaceFolder}/node_modules/electron/dist/Electron.app",
-            },
-            "sourceMaps": false
-        }
+      {
+        "name": "Debug Main Process",
+        "type": "node",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+        "windows": {
+          "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+        },
+        "args" : ["."],
+        "outputCapture": "std"
+      }
     ]
-}
+  }
