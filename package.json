@@ -12,6 +12,6 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "electron": "^19.0.9"
+    "electron": "^19.0.11"
   }
 }
